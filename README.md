@@ -3,8 +3,8 @@ man2mobi
 Convert linux manpage to kindle mobi file.
 
 ####Requirements
-man2html
-kindlegen
+* man2html
+* kindlegen
 
 ####Usage
 Example
