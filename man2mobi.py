@@ -19,10 +19,10 @@ def man2html(cmd):
     commands.getstatusoutput(set_line_width)
 
     # man to html
-    gen_html = 'man {cmd} | man2html -compress -cgiurl '\
-              'man$section/$title.$section$subsection.html '\
-              '> {html_file}'.format(cmd=cmd, html_file=html_file)
-    rst, output =commands.getstatusoutput(gen_html)
+    gen_html = "man {cmd}| man2html -compress -cgiurl "\
+              "man$section/$title.$section$subsection.html "\
+              "> {html_file}".format(cmd=cmd, html_file=html_file)
+    rst, output = commands.getstatusoutput(gen_html)
     if rst != 0 or output.startswith('No manual entry for'):
         raise Exception('man2html Error: %s' % output)
     print output
@@ -30,6 +30,16 @@ def man2html(cmd):
     # unset MANWIDTH to normal
     unset_width = 'unset MANWIDTH'
     commands.getstatusoutput(unset_width)
+
+    # reformat html
+    # Some manpages contains fullwidth format characters, for example tmux,
+    # which will occur unreadable characters, mojibake.
+    # Also I replace 4 spaces with one space, to make it more readable considering kindle screen size.
+    with open(html_file, 'r') as hf:
+        content = hf.read().replace('    ', ' ').replace('’', '\'').replace('‘', '\'')
+
+    with open(html_file, 'w') as hf:
+        hf.write(content)
 
     return html_file
 
